@@ -1,30 +1,50 @@
 ﻿using DocuDiff.Services;
 
-Console.Write("Enter DOCX file path: ");
-
-string? path = Console.ReadLine();
-
-if (string.IsNullOrWhiteSpace(path))
-{
-    Console.WriteLine("No file selected.");
-    return;
-}
-
-if (!File.Exists(path))
-{
-    Console.WriteLine("File not found.");
-    return;
-}
-
 DocumentReader reader = new();
+ComparisonService comparer = new();
 
-var document = reader.Read(path);
+Console.Write("Enter ORIGINAL DOCX path: ");
+string? originalPath = Console.ReadLine();
+
+Console.Write("Enter MODIFIED DOCX path: ");
+string? modifiedPath = Console.ReadLine();
+
+if (string.IsNullOrWhiteSpace(originalPath) ||
+    string.IsNullOrWhiteSpace(modifiedPath))
+{
+    Console.WriteLine("Both file paths are required.");
+    return;
+}
+
+if (!File.Exists(originalPath) || !File.Exists(modifiedPath))
+{
+    Console.WriteLine("One or both files do not exist.");
+    return;
+}
+
+var originalDocument = reader.Read(originalPath);
+var modifiedDocument = reader.Read(modifiedPath);
+
+var result = comparer.Compare(originalDocument, modifiedDocument);
 
 Console.WriteLine();
-Console.WriteLine("Paragraphs found:");
-Console.WriteLine("----------------------------");
+Console.WriteLine("========== COMPARISON ==========");
+Console.WriteLine();
 
-foreach (string paragraph in document.Paragraphs)
+Console.WriteLine($"Added paragraphs: {result.AddedParagraphs.Count}");
+foreach (var paragraph in result.AddedParagraphs)
 {
-    Console.WriteLine(paragraph);
+    Console.WriteLine($"+ {paragraph}");
 }
+
+Console.WriteLine();
+
+Console.WriteLine($"Removed paragraphs: {result.RemovedParagraphs.Count}");
+foreach (var paragraph in result.RemovedParagraphs)
+{
+    Console.WriteLine($"- {paragraph}");
+}
+
+Console.WriteLine();
+
+Console.WriteLine($"Unchanged paragraphs: {result.UnchangedParagraphs.Count}");

@@ -1,13 +1,44 @@
 ﻿using DocuDiff.Services;
 
-WordComparisonService wordComparer = new();
+DocumentReader reader = new();
+DocumentComparisonService comparer = new();
 
-var result = wordComparer.CompareWords(
-    "John likes pizza.",
-    "John really likes pizza."
-);
+Console.Write("Enter ORIGINAL DOCX path: ");
+string? originalPath = Console.ReadLine();
 
-foreach (var word in result.Words)
+Console.Write("Enter MODIFIED DOCX path: ");
+string? modifiedPath = Console.ReadLine();
+
+if (string.IsNullOrWhiteSpace(originalPath) ||
+    string.IsNullOrWhiteSpace(modifiedPath))
 {
-    Console.WriteLine($"{word.ChangeType}: {word.Text}");
+    Console.WriteLine("Both file paths are required.");
+    return;
+}
+
+if (!File.Exists(originalPath) || !File.Exists(modifiedPath))
+{
+    Console.WriteLine("One or both files do not exist.");
+    return;
+}
+
+var originalDocument = reader.Read(originalPath);
+var modifiedDocument = reader.Read(modifiedPath);
+
+var comparison = comparer.Compare(originalDocument, modifiedDocument);
+
+Console.WriteLine();
+Console.WriteLine("========== WORD-LEVEL COMPARISON ==========");
+Console.WriteLine();
+
+foreach (var paragraph in comparison.Paragraphs)
+{
+    Console.WriteLine($"Paragraph {paragraph.ParagraphNumber}:");
+
+    foreach (var word in paragraph.Words)
+    {
+        Console.WriteLine($"{word.ChangeType}: {word.Text}");
+    }
+
+    Console.WriteLine();
 }

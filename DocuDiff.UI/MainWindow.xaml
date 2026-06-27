@@ -1,0 +1,58 @@
+﻿<Window x:Class="DocuDiff.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Luai's Document Comparer"
+        Height="650"
+        Width="900">
+
+    <Grid Margin="20">
+        <StackPanel>
+
+            <TextBlock Text="Luai's Document Comparer"
+                       FontSize="28"
+                       FontWeight="Bold"
+                       Margin="0,0,0,20"/>
+
+            <Button Content="Browse Original DOCX"
+                    Click="BrowseOriginal_Click"
+                    Height="35"
+                    Margin="0,0,0,10"/>
+
+            <TextBlock x:Name="OriginalPathText"
+                       Text="No original file selected"
+                       Margin="0,0,0,15"/>
+
+            <Button Content="Browse Modified DOCX"
+                    Click="BrowseModified_Click"
+                    Height="35"
+                    Margin="0,0,0,10"/>
+
+            <TextBlock x:Name="ModifiedPathText"
+                       Text="No modified file selected"
+                       Margin="0,0,0,20"/>
+
+            <Button Content="Compare Documents"
+                    Click="Compare_Click"
+                    Height="40"
+                    FontWeight="Bold"
+                    Margin="0,0,0,10"/>
+
+            <Button Content="Export HTML Report"
+                    Click="ExportReport_Click"
+                    Height="35"
+                    Margin="0,0,0,20"/>
+
+            <ScrollViewer Height="400"
+                          VerticalScrollBarVisibility="Auto">
+
+                <TextBlock x:Name="ResultText"
+                           TextWrapping="Wrap"
+                           FontFamily="Consolas"
+                           FontSize="14"/>
+
+            </ScrollViewer>
+
+        </StackPanel>
+    </Grid>
+
+</Window>

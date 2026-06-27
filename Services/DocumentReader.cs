@@ -23,8 +23,20 @@ public class DocumentReader
             string text = paragraph.InnerText.Trim();
 
             if (!string.IsNullOrWhiteSpace(text))
-            {
                 document.Paragraphs.Add(text);
+        }
+
+        foreach (Table table in body.Descendants<Table>())
+        {
+            foreach (TableRow row in table.Descendants<TableRow>())
+            {
+                var cells = row.Descendants<TableCell>()
+                    .Select(cell => cell.InnerText.Trim())
+                    .Where(text => !string.IsNullOrWhiteSpace(text))
+                    .ToList();
+
+                if (cells.Count > 0)
+                    document.TableRows.Add(string.Join(" | ", cells));
             }
         }
 
